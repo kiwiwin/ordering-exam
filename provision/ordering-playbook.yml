@@ -5,4 +5,5 @@
   sudo_user: vagrant
   roles:
     - java
+    - gradle
     - mongodb
