@@ -22,6 +22,8 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.kiwi.resource.domain.OrderWithId.orderWithId;
@@ -61,7 +63,7 @@ public class OrdersResourceTest extends JerseyTest {
     @Test
     public void should_get_order_by_id() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order()));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen")));
 
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
 
@@ -70,6 +72,10 @@ public class OrdersResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(200));
+
+        final Map order = response.readEntity(Map.class);
+
+        assertThat(order.get("receiver"), is("Jingcheng Wen"));
     }
 
     @Test

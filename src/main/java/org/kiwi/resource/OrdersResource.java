@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.kiwi.resource.domain.Order;
 import org.kiwi.resource.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
+import org.kiwi.resource.representation.OrderRef;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,12 +20,12 @@ public class OrdersResource {
 
     @GET
     @Path("{orderId}")
-    public String getOrderById(@PathParam("orderId") ObjectId orderId) {
+    public OrderRef getOrderById(@PathParam("orderId") ObjectId orderId) {
         final Order order = user.getOrderById(orderId);
         if (order == null) {
             throw new ResourceNotFoundException();
         }
 
-        return "";
+        return new OrderRef(order);
     }
 }
