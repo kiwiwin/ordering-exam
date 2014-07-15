@@ -8,8 +8,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ProductRef {
-    private final Product product;
-    private final UriInfo uriInfo;
+    private Product product;
+    private UriInfo uriInfo;
+
+    public ProductRef() {
+
+    }
 
     public ProductRef(Product product, UriInfo uriInfo) {
         this.product = product;

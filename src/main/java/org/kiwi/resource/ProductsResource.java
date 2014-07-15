@@ -24,6 +24,7 @@ public class ProductsResource {
 
     @GET
     @Path("{productId}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public ProductRef getProductById(@PathParam("productId") ObjectId productId, @Context UriInfo uriInfo) {
         final Product product = productsRepository.getProductById(productId);
         return new ProductRef(product, uriInfo);

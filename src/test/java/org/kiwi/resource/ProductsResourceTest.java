@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
@@ -44,6 +45,7 @@ public class ProductsResourceTest extends JerseyTest {
         return new ResourceConfig().
                 packages("org.kiwi.resource")
                 .register(App.createMoxyJsonResolver())
+                .register(new MoxyXmlFeature())
                 .register(JacksonFeature.class)
                 .register(new AbstractBinder() {
                     @Override
@@ -76,6 +78,16 @@ public class ProductsResourceTest extends JerseyTest {
         assertThat(product.get("id"), is("53c4971cbaee369cc69d9e2d"));
     }
 
+    @Test
+    public void should_get_product_by_id_with_xml() {
+        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good")));
+
+        final Response response = target("/products/53c4971cbaee369cc69d9e2d")
+                .request(MediaType.APPLICATION_XML_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+    }
 
     @Test
     public void should_get_404_when_product_not_exist() {
