@@ -6,10 +6,7 @@ import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kiwi.resource.domain.Order;
-import org.kiwi.resource.domain.OrderItem;
-import org.kiwi.resource.domain.Product;
-import org.kiwi.resource.domain.User;
+import org.kiwi.resource.domain.*;
 import org.kiwi.resource.repository.MongoProductsRepository;
 import org.kiwi.resource.repository.MongoUsersRepository;
 
@@ -63,5 +60,20 @@ public class MongoUsersRepositoryTest {
         assertThat(orderFromDb.getReceiver(), is("kiwi"));
         assertThat(orderFromDb.getShippingAddress(), is("chengdu"));
         assertThat(orderFromDb.getOrderItems().size(), is(1));
+    }
+
+    @Test
+    public void should_pay_order() {
+        usersRepository.payOrder(user, order, new Payment("cash", 100, new Timestamp(114, 1, 1, 0, 1, 0, 0)));
+
+        final User userFromDb = usersRepository.getUserById(user.getId());
+
+        final Order orderFromDb = userFromDb.getOrderById(order.getId());
+
+        final Payment paymentFromDb = orderFromDb.getPayment();
+
+        assertThat(paymentFromDb.getPaymentType(), is("cash"));
+        assertThat(paymentFromDb.getAmount(), is(100));
+        assertThat(paymentFromDb.getCreatedAt().toString(), is(new Timestamp(114, 1, 1, 0, 1, 0, 0).toString()));
     }
 }

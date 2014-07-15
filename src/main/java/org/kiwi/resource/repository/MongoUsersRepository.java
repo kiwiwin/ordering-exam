@@ -55,9 +55,21 @@ public class MongoUsersRepository implements UsersRepository {
     }
 
     private Order mapOrderFromDocument(DBObject orderDocument) {
-        return orderWithId(orderDocument.get("_id").toString(), new Order((String) orderDocument.get("receiver"),
+        final Order order = new Order((String) orderDocument.get("receiver"),
                 (String) orderDocument.get("shippingAddress"),
-                Timestamp.valueOf((String) orderDocument.get("createdAt")), mapOrderItemsFromDocumentList((BasicDBList) orderDocument.get("orderItems"))));
+                Timestamp.valueOf((String) orderDocument.get("createdAt")), mapOrderItemsFromDocumentList((BasicDBList) orderDocument.get("orderItems")));
+
+        if (orderDocument.get("payment") != null) {
+            order.pay(mapPaymentFromDocument((DBObject) orderDocument.get("payment")));
+        }
+
+        return orderWithId(orderDocument.get("_id").toString(), order);
+    }
+
+    private Payment mapPaymentFromDocument(DBObject paymentDocument) {
+        return new Payment((String) paymentDocument.get("paymentType"),
+                (int) paymentDocument.get("amount"),
+                Timestamp.valueOf((String) paymentDocument.get("createdAt")));
     }
 
     private List<OrderItem> mapOrderItemsFromDocumentList(BasicDBList orderItemsDocumentList) {
@@ -111,7 +123,30 @@ public class MongoUsersRepository implements UsersRepository {
 
     @Override
     public Payment payOrder(User user, Order order, Payment payment) {
-        return null;
+        final DBObject userDocument = db.getCollection("users").findOne(new BasicDBObject("_id", user.getId()));
+
+        final BasicDBList ordersDocumentList = (BasicDBList) userDocument.get("orders");
+
+        for (Object anOrder : ordersDocumentList) {
+            final DBObject dbOrder = (DBObject) anOrder;
+            if (dbOrder.get("_id").toString().equals(order.getId().toString())) {
+                order.pay(payment);
+                dbOrder.put("payment", mapPaymentToDocument(payment));
+                break;
+            }
+        }
+
+        db.getCollection("users").findAndModify(new BasicDBObject("_id", user.getId()), userDocument);
+
+        return payment;
+    }
+
+    private DBObject mapPaymentToDocument(Payment payment) {
+        return new BasicDBObjectBuilder()
+                .add("paymentType", payment.getPaymentType())
+                .add("amount", payment.getAmount())
+                .add("createdAt", payment.getCreatedAt().toString())
+                .get();
     }
 
     private DBObject mapOrderToDocument(ObjectId orderId, Order order) {
