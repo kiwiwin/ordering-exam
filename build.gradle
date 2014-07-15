@@ -1,5 +1,26 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.hidetake:gradle-ssh-plugin:0.3.10'
+    }
+}
+
+apply plugin: 'ssh'
+
+remotes {
+    vagrant {
+        host = '192.168.89.89'
+        user = 'vagrant'
+
+        identity = file("${System.properties['user.home']}/.vagrant.d/insecure_private_key")
+    }
+}
+
 apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -34,11 +55,44 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 }
 
-task execute(type:JavaExec) {
+task execute(type: JavaExec) {
     main = "org.kiwi.App"
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task uberjar(type: Jar, dependsOn: jar) {
+    classifier = "standalone"
+
+    from files(sourceSets.main.output.classesDir)
+    from files(sourceSets.main.output.resourcesDir)
+
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    exclude("META-INF/*.SF")
+    exclude("META-INF/*.DSA")
+    exclude("META-INF/*.RSA")
+
+    manifest {
+        attributes 'Main-Class': "org.kiwi.App"
+    }
+}
+
+
+task checkServer(type: SshTask) {
+    session(remotes.vagrant) {
+        execute 'ifconfig'
+    }
+}
+
+
+
+task deploy(type: SshTask, dependsOn: uberjar) {
+    session(remotes.vagrant) {
+        put uberjar.archivePath.absolutePath, '/home/vagrant'
+
+        executeBackground('nohup java -jar /home/vagrant/ordering-exam-standalone.jar 1>/dev/null 2>&1 < /dev/null &')
+    }
+}
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8

@@ -1,8 +1,0 @@
-- name: checkout demo source code
-  git: repo=git://github.com/kiwiwin/ordering-exam.git
-       dest=/ordering-exam
-
-- name: start server
-  shell: nohup /gradle/gradle-1.12/bin/gradle execute 1>/dev/null 2>&1 < /dev/null &
-  args:
-    chdir: /ordering-exam

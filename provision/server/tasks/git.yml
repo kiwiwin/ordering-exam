@@ -1,4 +1,0 @@
-- name: git | Install Git
-  apt:
-    pkg: git
-    state: present
