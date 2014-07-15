@@ -43,4 +43,8 @@ public class Order {
     public void pay(Payment payment) {
         this.payment = payment;
     }
+
+    public Payment getPayment() {
+        return payment;
+    }
 }

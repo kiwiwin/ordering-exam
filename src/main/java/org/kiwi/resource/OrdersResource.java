@@ -7,6 +7,7 @@ import org.kiwi.resource.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.UsersRepository;
 import org.kiwi.resource.representation.OrderRef;
+import org.kiwi.resource.representation.PaymentRef;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -52,8 +53,13 @@ public class OrdersResource {
     @GET
     @Path("{orderId}/payment")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public String getPayment(@PathParam("orderId") ObjectId orderId) {
-        return "";
+    public PaymentRef getPayment(@PathParam("orderId") ObjectId orderId) {
+        final Order order = user.getOrderById(orderId);
+        if (order == null) {
+            throw new ResourceNotFoundException();
+        }
+
+        return new PaymentRef(order.getPayment());
     }
 
 

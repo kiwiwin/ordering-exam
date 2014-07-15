@@ -12,4 +12,16 @@ public class Payment {
         this.amount = amount;
         this.createdAt = createdAt;
     }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
 }

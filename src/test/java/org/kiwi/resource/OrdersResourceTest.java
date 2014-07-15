@@ -234,6 +234,12 @@ public class OrdersResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(200));
+
+        final Map payment = response.readEntity(Map.class);
+
+        assertThat(payment.get("paymentType"), is("cash"));
+        assertThat(payment.get("amount"), is(100));
+        assertThat(payment.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 1, 0, 0).toString()));
     }
 
 }
