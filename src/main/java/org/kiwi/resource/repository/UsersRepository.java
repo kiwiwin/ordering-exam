@@ -5,4 +5,6 @@ import org.kiwi.resource.domain.User;
 
 public interface UsersRepository {
     User getUserById(ObjectId userId);
+
+    User createUser(User user);
 }
