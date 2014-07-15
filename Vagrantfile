@@ -134,7 +134,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     cfg.vm.provision :ansible do |ansible|
         ansible.playbook = "provision/ordering-playbook.yml"
-        ansible.verbose = 'vv'
+        ansible.verbose = 'vvv'
     end
   end
 end

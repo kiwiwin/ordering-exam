@@ -2,8 +2,11 @@
 - name: Install unzip
   apt: pkg=unzip state=latest
 
+- name: create gradle directory
+  shell: mkdir -p /gradle
+
 - name: get gradle directory
-  command: ls /gradle
+  shell: ls /gradle
   register: gradle_directory
 
 - name: create gradle packages directory
