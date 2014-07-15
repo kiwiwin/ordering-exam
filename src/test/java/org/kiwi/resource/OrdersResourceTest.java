@@ -77,6 +77,7 @@ public class OrdersResourceTest extends JerseyTest {
 
         assertThat(order.get("receiver"), is("Jingcheng Wen"));
         assertThat(order.get("shippingAddress"), is("Sanli,Chengdu"));
+        assertThat(order.get("id"), is("53c4971cbaee369cc69d9e2e"));
     }
 
     @Test

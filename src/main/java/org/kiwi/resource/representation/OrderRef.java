@@ -15,6 +15,11 @@ public class OrderRef {
     }
 
     @XmlElement
+    public String getId() {
+        return order.getId().toString();
+    }
+
+    @XmlElement
     public String getReceiver() {
         return order.getReceiver();
     }
