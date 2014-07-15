@@ -2,17 +2,17 @@ package org.kiwi.resource.repository;
 
 import com.mongodb.*;
 import org.bson.types.ObjectId;
-import org.kiwi.resource.domain.Order;
-import org.kiwi.resource.domain.OrderItem;
-import org.kiwi.resource.domain.Payment;
-import org.kiwi.resource.domain.User;
+import org.kiwi.domain.Order;
+import org.kiwi.domain.OrderItem;
+import org.kiwi.domain.Payment;
+import org.kiwi.domain.User;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.kiwi.resource.domain.OrderWithId.orderWithId;
-import static org.kiwi.resource.domain.UserWithId.userWithId;
+import static org.kiwi.domain.OrderWithId.orderWithId;
+import static org.kiwi.domain.UserWithId.userWithId;
 
 public class MongoUsersRepository implements UsersRepository {
     private final DB db;

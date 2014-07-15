@@ -2,12 +2,12 @@ package org.kiwi.resource.repository;
 
 import com.mongodb.*;
 import org.bson.types.ObjectId;
-import org.kiwi.resource.domain.Product;
+import org.kiwi.domain.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.kiwi.resource.domain.ProductWithId.productWithId;
+import static org.kiwi.domain.ProductWithId.productWithId;
 
 public class MongoProductsRepository implements ProductsRepository {
     private final DB db;

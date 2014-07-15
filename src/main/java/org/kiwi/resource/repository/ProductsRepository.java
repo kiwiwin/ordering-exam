@@ -1,7 +1,7 @@
 package org.kiwi.resource.repository;
 
 import org.bson.types.ObjectId;
-import org.kiwi.resource.domain.Product;
+import org.kiwi.domain.Product;
 
 import java.util.List;
 

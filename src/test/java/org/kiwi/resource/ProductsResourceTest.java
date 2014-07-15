@@ -11,7 +11,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.App;
-import org.kiwi.resource.domain.Product;
+import org.kiwi.domain.Product;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.ProductsRepository;
 import org.mockito.Mock;
@@ -20,7 +20,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
-import static org.kiwi.resource.domain.ProductWithId.productWithId;
+import static org.kiwi.domain.ProductWithId.productWithId;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 

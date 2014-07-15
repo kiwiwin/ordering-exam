@@ -1,9 +1,9 @@
 package org.kiwi.resource.repository;
 
 import org.bson.types.ObjectId;
-import org.kiwi.resource.domain.Order;
-import org.kiwi.resource.domain.Payment;
-import org.kiwi.resource.domain.User;
+import org.kiwi.domain.Order;
+import org.kiwi.domain.Payment;
+import org.kiwi.domain.User;
 
 public interface UsersRepository {
     User getUserById(ObjectId userId);

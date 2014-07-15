@@ -1,8 +1,7 @@
 package org.kiwi.resource.representation;
 
-import org.kiwi.resource.domain.Order;
-import org.kiwi.resource.domain.OrderItem;
-import org.kiwi.resource.domain.User;
+import org.kiwi.domain.Order;
+import org.kiwi.domain.User;
 
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;

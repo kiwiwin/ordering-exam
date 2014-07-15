@@ -1,7 +1,7 @@
 package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
-import org.kiwi.resource.domain.Product;
+import org.kiwi.domain.Product;
 import org.kiwi.resource.repository.ProductsRepository;
 import org.kiwi.resource.representation.ProductRef;
 

@@ -11,10 +11,10 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.App;
-import org.kiwi.resource.domain.Order;
-import org.kiwi.resource.domain.OrderItem;
-import org.kiwi.resource.domain.Payment;
-import org.kiwi.resource.domain.User;
+import org.kiwi.domain.Order;
+import org.kiwi.domain.OrderItem;
+import org.kiwi.domain.Payment;
+import org.kiwi.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.UsersRepository;
 import org.mockito.Mock;
@@ -22,15 +22,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.*;
-
 import java.sql.Timestamp;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
-import static org.kiwi.resource.domain.OrderWithId.orderWithId;
-import static org.kiwi.resource.domain.UserWithId.userWithId;
+import static org.kiwi.domain.OrderWithId.orderWithId;
+import static org.kiwi.domain.UserWithId.userWithId;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;

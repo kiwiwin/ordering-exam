@@ -1,4 +1,4 @@
-package org.kiwi.resource.domain;
+package org.kiwi.domain;
 
 import org.bson.types.ObjectId;
 

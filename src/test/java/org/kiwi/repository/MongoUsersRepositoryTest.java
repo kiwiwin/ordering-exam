@@ -2,17 +2,15 @@ package org.kiwi.repository;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kiwi.resource.domain.*;
+import org.kiwi.domain.*;
 import org.kiwi.resource.repository.MongoProductsRepository;
 import org.kiwi.resource.repository.MongoUsersRepository;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

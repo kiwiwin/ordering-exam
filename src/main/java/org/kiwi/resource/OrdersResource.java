@@ -1,10 +1,10 @@
 package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
-import org.kiwi.resource.domain.Order;
-import org.kiwi.resource.domain.OrderItem;
-import org.kiwi.resource.domain.Payment;
-import org.kiwi.resource.domain.User;
+import org.kiwi.domain.Order;
+import org.kiwi.domain.OrderItem;
+import org.kiwi.domain.Payment;
+import org.kiwi.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.UsersRepository;
 import org.kiwi.resource.representation.OrderRef;

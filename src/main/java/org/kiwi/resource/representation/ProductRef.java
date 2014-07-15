@@ -1,6 +1,6 @@
 package org.kiwi.resource.representation;
 
-import org.kiwi.resource.domain.Product;
+import org.kiwi.domain.Product;
 
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;

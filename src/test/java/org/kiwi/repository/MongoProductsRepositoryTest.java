@@ -5,7 +5,7 @@ import com.mongodb.MongoClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.kiwi.resource.domain.Product;
+import org.kiwi.domain.Product;
 import org.kiwi.resource.repository.MongoProductsRepository;
 
 import java.util.List;
