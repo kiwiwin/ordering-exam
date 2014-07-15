@@ -9,8 +9,10 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 @Path("products")
 public class ProductsResource {
@@ -23,5 +25,10 @@ public class ProductsResource {
     public ProductRef getProductById(@PathParam("productId") ObjectId productId, @Context UriInfo uriInfo) {
         final Product product = productsRepository.getProductById(productId);
         return new ProductRef(product, uriInfo);
+    }
+
+    @GET
+    public String getAllProducts(@Context UriInfo uriInfo) {
+        return "";
     }
 }

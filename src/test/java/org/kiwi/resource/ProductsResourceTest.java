@@ -20,6 +20,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -84,5 +85,16 @@ public class ProductsResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(404));
+    }
+
+    @Test
+    public void should_get_all_products() {
+        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good"))));
+
+        final Response response = target("/products")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
     }
 }
