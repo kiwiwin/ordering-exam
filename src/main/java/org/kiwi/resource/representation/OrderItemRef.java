@@ -23,4 +23,9 @@ public class OrderItemRef {
     public int getQuantity() {
         return orderItem.getQuantity();
     }
+
+    @XmlElement
+    public int getPrice() {
+        return orderItem.getPrice();
+    }
 }
