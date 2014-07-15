@@ -55,7 +55,7 @@ public class MongoUsersRepository implements UsersRepository {
     private Order mapOrderFromDocument(DBObject orderDocument) {
         return orderWithId(orderDocument.get("_id").toString(), new Order((String) orderDocument.get("receiver"),
                 (String) orderDocument.get("shippingAddress"),
-                Timestamp.valueOf((String) orderDocument.get("createdAt"))));
+                Timestamp.valueOf((String) orderDocument.get("createdAt")), null));
     }
 
     @Override

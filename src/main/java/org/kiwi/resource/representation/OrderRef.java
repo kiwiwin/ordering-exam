@@ -1,11 +1,14 @@
 package org.kiwi.resource.representation;
 
 import org.kiwi.resource.domain.Order;
+import org.kiwi.resource.domain.OrderItem;
 import org.kiwi.resource.domain.User;
 
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @XmlRootElement
 public class OrderRef {
@@ -47,5 +50,12 @@ public class OrderRef {
     @XmlElement
     public String getCreatedAt() {
         return order.getCreatedAt().toString();
+    }
+
+    @XmlElement(name = "orderItems")
+    public List<OrderItemRef> getOrderItems() {
+        return order.getOrderItems().stream()
+                .map(orderItem -> new OrderItemRef(orderItem, uriInfo))
+                .collect(Collectors.toList());
     }
 }

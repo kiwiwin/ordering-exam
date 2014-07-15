@@ -58,6 +58,6 @@ public class OrdersResource {
     private Order getOrderFromOrderParams(Map orderParams) {
         return new Order((String) orderParams.get("receiver"),
                 (String) orderParams.get("shippingAddress"),
-                Timestamp.valueOf((String) orderParams.get("createdAt")));
+                Timestamp.valueOf((String) orderParams.get("createdAt")), null);
     }
 }

@@ -2,22 +2,24 @@ package org.kiwi.repository;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.resource.domain.Order;
-import org.kiwi.resource.domain.Product;
+import org.kiwi.resource.domain.OrderItem;
 import org.kiwi.resource.domain.User;
 import org.kiwi.resource.repository.MongoUsersRepository;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class MongoUsersRepositoryTest {
     private MongoUsersRepository usersRepository;
-    private Product newProduct;
     private DB db;
     private User user;
     private Order order;
@@ -29,7 +31,7 @@ public class MongoUsersRepositoryTest {
         usersRepository = new MongoUsersRepository(db);
         user = usersRepository.createUser(new User("kiwi"));
 
-        order = usersRepository.placeOrder(user, new Order("kiwi", "chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0)));
+        order = usersRepository.placeOrder(user, new Order("kiwi", "chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), null));
     }
 
     @After
