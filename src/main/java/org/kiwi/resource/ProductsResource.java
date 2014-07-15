@@ -3,6 +3,7 @@ package org.kiwi.resource;
 import org.bson.types.ObjectId;
 import org.kiwi.resource.domain.Product;
 import org.kiwi.resource.repository.ProductsRepository;
+import org.kiwi.resource.representation.ProductRef;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -17,8 +18,8 @@ public class ProductsResource {
 
     @GET
     @Path("{productId}")
-    public String getProductById(@PathParam("productId") ObjectId productId) {
+    public ProductRef getProductById(@PathParam("productId") ObjectId productId) {
         final Product product = productsRepository.getProductById(productId);
-        return "";
+        return new ProductRef(product);
     }
 }

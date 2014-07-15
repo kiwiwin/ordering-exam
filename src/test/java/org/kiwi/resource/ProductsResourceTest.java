@@ -2,11 +2,14 @@ package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kiwi.App;
 import org.kiwi.resource.domain.Product;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.ProductsRepository;
@@ -17,8 +20,11 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.kiwi.resource.domain.ProductWithId.productWithId;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +40,8 @@ public class ProductsResourceTest extends JerseyTest {
 
         return new ResourceConfig().
                 packages("org.kiwi.resource")
+                .register(App.createMoxyJsonResolver())
+                .register(JacksonFeature.class)
                 .register(new AbstractBinder() {
                     @Override
                     protected void configure() {
@@ -42,15 +50,24 @@ public class ProductsResourceTest extends JerseyTest {
                 });
     }
 
+    @Override
+    protected void configureClient(ClientConfig config) {
+        config.register(JacksonFeature.class);
+    }
+
     @Test
     public void should_get_product_by_id() {
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(new Product());
+        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice")));
 
         final Response response = target("/products/53c4971cbaee369cc69d9e2d")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
         assertThat(response.getStatus(), is(200));
+
+        final Map product = response.readEntity(Map.class);
+
+        assertThat((String) product.get("name"), is("apple juice"));
     }
 
 
