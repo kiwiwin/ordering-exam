@@ -62,7 +62,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_product_by_id() {
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good")));
+        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100)));
 
         final Response response = target("/products/53c4971cbaee369cc69d9e2d")
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -76,11 +76,12 @@ public class ProductsResourceTest extends JerseyTest {
         assertThat(product.get("description"), is("good"));
         assertThat((String) product.get("uri"), endsWith("/products/53c4971cbaee369cc69d9e2d"));
         assertThat(product.get("id"), is("53c4971cbaee369cc69d9e2d"));
+        assertThat(product.get("currentPrice"), is(100));
     }
 
     @Test
     public void should_get_product_by_id_with_xml() {
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good")));
+        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100)));
 
         final Response response = target("/products/53c4971cbaee369cc69d9e2d")
                 .request(MediaType.APPLICATION_XML_TYPE)
@@ -102,7 +103,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_products() {
-        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good"))));
+        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100))));
 
         final Response response = target("/products")
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -117,7 +118,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_products_with_xml() {
-        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good"))));
+        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100))));
 
         final Response response = target("/products")
                 .request(MediaType.APPLICATION_XML_TYPE)

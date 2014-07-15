@@ -47,6 +47,6 @@ public class MongoProductsRepository implements ProductsRepository {
         final String description = (String) productDocument.get("description");
         final Object id = productDocument.get("_id");
 
-        return productWithId(id.toString(), new Product(name, description));
+        return productWithId(id.toString(), new Product(name, description, 100));
     }
 }

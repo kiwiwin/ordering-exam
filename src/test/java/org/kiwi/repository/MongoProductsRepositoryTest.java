@@ -19,7 +19,7 @@ public class MongoProductsRepositoryTest {
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         DB db = mongoClient.getDB("test");
         productsRepository = new MongoProductsRepository(db);
-        newProduct = productsRepository.createProduct(new Product("apple juice", "good"));
+        newProduct = productsRepository.createProduct(new Product("apple juice", "good", 100));
     }
 
     @Test

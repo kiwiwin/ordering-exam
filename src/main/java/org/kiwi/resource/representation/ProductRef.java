@@ -39,4 +39,9 @@ public class ProductRef {
     public String getUri() {
         return uriInfo.getBaseUri() + "products/" + product.getId().toString();
     }
+
+    @XmlElement
+    public int getCurrentPrice() {
+        return product.getCurrentPrice();
+    }
 }
