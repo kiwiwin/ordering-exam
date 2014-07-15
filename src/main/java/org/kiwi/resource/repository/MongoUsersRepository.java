@@ -3,6 +3,7 @@ package org.kiwi.resource.repository;
 import com.mongodb.*;
 import org.bson.types.ObjectId;
 import org.kiwi.resource.domain.Order;
+import org.kiwi.resource.domain.OrderItem;
 import org.kiwi.resource.domain.User;
 
 import java.sql.Timestamp;
@@ -55,7 +56,23 @@ public class MongoUsersRepository implements UsersRepository {
     private Order mapOrderFromDocument(DBObject orderDocument) {
         return orderWithId(orderDocument.get("_id").toString(), new Order((String) orderDocument.get("receiver"),
                 (String) orderDocument.get("shippingAddress"),
-                Timestamp.valueOf((String) orderDocument.get("createdAt")), null));
+                Timestamp.valueOf((String) orderDocument.get("createdAt")), mapOrderItemsFromDocumentList((BasicDBList) orderDocument.get("orderItems"))));
+    }
+
+    private List<OrderItem> mapOrderItemsFromDocumentList(BasicDBList orderItemsDocumentList) {
+        final List<OrderItem> orderItems = new ArrayList<>();
+
+        for (Object orderItem : orderItemsDocumentList) {
+            orderItems.add(mapOrderItemFromDocument((DBObject) orderItem));
+        }
+
+        return orderItems;
+    }
+
+    private OrderItem mapOrderItemFromDocument(DBObject orderItem) {
+        return new OrderItem((ObjectId) ((DBRef) orderItem.get("productId")).fetch().get("_id"),
+                (int) orderItem.get("quantity"),
+                (int) orderItem.get("price"));
     }
 
     @Override
@@ -97,6 +114,25 @@ public class MongoUsersRepository implements UsersRepository {
                 .add("receiver", order.getReceiver())
                 .add("shippingAddress", order.getShippingAddress())
                 .add("createdAt", order.getCreatedAt().toString())
+                .add("orderItems", mapOrderItemsToDocumentList(order.getOrderItems()))
+                .get();
+    }
+
+    private BasicDBList mapOrderItemsToDocumentList(List<OrderItem> orderItems) {
+        final BasicDBList orderItemsDocumentList = new BasicDBList();
+
+        for (OrderItem orderItem : orderItems) {
+            orderItemsDocumentList.add(mapOrderItemToDocument(orderItem));
+        }
+
+        return orderItemsDocumentList;
+    }
+
+    private DBObject mapOrderItemToDocument(OrderItem orderItem) {
+        return new BasicDBObjectBuilder()
+                .add("productId", new DBRef(db, "products", orderItem.getProductId()))
+                .add("quantity", orderItem.getQuantity())
+                .add("price", orderItem.getPrice())
                 .get();
     }
 
