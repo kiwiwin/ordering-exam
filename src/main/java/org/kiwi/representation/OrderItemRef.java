@@ -1,4 +1,4 @@
-package org.kiwi.resource.representation;
+package org.kiwi.representation;
 
 import org.kiwi.domain.OrderItem;
 

@@ -3,7 +3,7 @@ package org.kiwi.resource;
 import org.bson.types.ObjectId;
 import org.kiwi.domain.Product;
 import org.kiwi.repository.ProductsRepository;
-import org.kiwi.resource.representation.ProductRef;
+import org.kiwi.representation.ProductRef;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
