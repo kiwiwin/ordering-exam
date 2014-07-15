@@ -2,10 +2,13 @@ package org.kiwi.repository;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.resource.domain.Product;
 import org.kiwi.resource.repository.MongoProductsRepository;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -13,13 +16,20 @@ import static org.junit.Assert.assertThat;
 public class MongoProductsRepositoryTest {
     private MongoProductsRepository productsRepository;
     private Product newProduct;
+    private DB db;
 
     @Before
     public void setUp() throws Exception {
         MongoClient mongoClient = new MongoClient("localhost", 27017);
-        DB db = mongoClient.getDB("test");
+        db = mongoClient.getDB("test");
         productsRepository = new MongoProductsRepository(db);
         newProduct = productsRepository.createProduct(new Product("apple juice", "good", 100));
+        productsRepository.createProduct(new Product("banana juice", "bad", 200));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        db.dropDatabase();
     }
 
     @Test
@@ -29,5 +39,12 @@ public class MongoProductsRepositoryTest {
         assertThat(productFromDb.getName(), is("apple juice"));
         assertThat(productFromDb.getDescription(), is("good"));
         assertThat(productFromDb.getCurrentPrice(), is(100));
+    }
+
+    @Test
+    public void should_get_all_products() {
+        final List<Product> productsFromDb = productsRepository.getAllProducts();
+
+        assertThat(productsFromDb.size(), is(2));
     }
 }

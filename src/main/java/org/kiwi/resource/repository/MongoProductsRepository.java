@@ -1,12 +1,10 @@
 package org.kiwi.resource.repository;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
+import com.mongodb.*;
 import org.bson.types.ObjectId;
 import org.kiwi.resource.domain.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.kiwi.resource.domain.ProductWithId.productWithId;
@@ -40,7 +38,15 @@ public class MongoProductsRepository implements ProductsRepository {
 
     @Override
     public List<Product> getAllProducts() {
-        return null;
+        final DBCursor productsCursor = db.getCollection("products").find();
+
+        final ArrayList<Product> products = new ArrayList<>();
+
+        while (productsCursor.hasNext()) {
+            products.add(mapProductFromDocument(productsCursor.next()));
+        }
+
+        return products;
     }
 
     private Product mapProductFromDocument(DBObject productDocument) {
