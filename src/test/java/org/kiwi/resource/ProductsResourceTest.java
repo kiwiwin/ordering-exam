@@ -114,4 +114,15 @@ public class ProductsResourceTest extends JerseyTest {
 
         assertThat(products.size(), is(1));
     }
+
+    @Test
+    public void should_get_all_products_with_xml() {
+        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good"))));
+
+        final Response response = target("/products")
+                .request(MediaType.APPLICATION_XML_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+    }
 }
