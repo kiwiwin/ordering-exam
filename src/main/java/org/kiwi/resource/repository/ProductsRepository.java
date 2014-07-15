@@ -6,6 +6,8 @@ import org.kiwi.resource.domain.Product;
 import java.util.List;
 
 public interface ProductsRepository {
+    Product createProduct(Product product);
+
     Product getProductById(ObjectId productId);
 
     List<Product> getAllProducts();
