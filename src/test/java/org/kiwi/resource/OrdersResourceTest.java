@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.kiwi.App;
 import org.kiwi.resource.domain.Order;
 import org.kiwi.resource.domain.OrderItem;
+import org.kiwi.resource.domain.Payment;
 import org.kiwi.resource.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.UsersRepository;
@@ -213,4 +214,26 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(response.getStatus(), is(201));
         assertThat(response.getHeaderString("location"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2f"));
     }
+
+
+
+    @Test
+    public void should_get_order_payment() {
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+
+        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+
+        final Order newOrder = orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
+        user.placeOrder(newOrder);
+        newOrder.pay(new Payment("cash", 100, new Timestamp(114, 1, 1, 0, 1, 0, 0)));
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+
+        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+    }
+
 }

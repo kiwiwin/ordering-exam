@@ -49,6 +49,14 @@ public class OrdersResource {
                 .collect(Collectors.toList());
     }
 
+    @GET
+    @Path("{orderId}/payment")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public String getPayment(@PathParam("orderId") ObjectId orderId) {
+        return "";
+    }
+
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response placeOrder(Map orderParams, @Context UriInfo uriInfo) {

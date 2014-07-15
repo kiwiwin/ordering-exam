@@ -11,6 +11,7 @@ public class Order {
     private String shippingAddress;
     private Timestamp createdAt;
     private final List<OrderItem> orderItems;
+    private Payment payment;
 
     public Order(String receiver, String shippingAddress, Timestamp createdAt, List<OrderItem> orderItems) {
         this.receiver = receiver;
@@ -37,5 +38,9 @@ public class Order {
 
     public List<OrderItem> getOrderItems() {
         return orderItems;
+    }
+
+    public void pay(Payment payment) {
+        this.payment = payment;
     }
 }
