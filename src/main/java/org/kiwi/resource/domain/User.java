@@ -31,4 +31,8 @@ public class User {
                 .filter(order -> order.getId().equals(orderId))
                 .findFirst().orElseGet(() -> null);
     }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
 }

@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -120,5 +121,32 @@ public class OrdersResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(404));
+    }
+
+    @Test
+    public void should_get_all_orders() {
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 2, 1, 0, 0, 0, 0))));
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+
+        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+
+        final List orders = response.readEntity(List.class);
+
+        assertThat(orders.size(), is(2));
+
+        final Map order = (Map) orders.get(0);
+
+        assertThat(order.get("receiver"), is("Jingcheng Wen"));
+        assertThat(order.get("shippingAddress"), is("Sanli,Chengdu"));
+        assertThat(order.get("id"), is("53c4971cbaee369cc69d9e2e"));
+        assertThat(order.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 0, 0, 0).toString()));
+        assertThat((String) order.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e"));
     }
 }

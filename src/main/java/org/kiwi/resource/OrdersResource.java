@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrdersResource {
 
@@ -32,5 +34,13 @@ public class OrdersResource {
         }
 
         return new OrderRef(user, order, uriInfo);
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public List<OrderRef> getAllOrders(@Context UriInfo uriInfo) {
+        return user.getOrders().stream()
+                .map(order -> new OrderRef(user, order, uriInfo))
+                .collect(Collectors.toList());
     }
 }
