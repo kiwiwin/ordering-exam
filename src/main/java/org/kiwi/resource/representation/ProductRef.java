@@ -17,6 +17,11 @@ public class ProductRef {
     }
 
     @XmlElement
+    public String getId() {
+        return product.getId().toString();
+    }
+
+    @XmlElement
     public String getName() {
         return product.getName();
     }

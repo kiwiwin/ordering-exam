@@ -71,6 +71,7 @@ public class ProductsResourceTest extends JerseyTest {
         assertThat((String) product.get("name"), is("apple juice"));
         assertThat((String) product.get("description"), is("good"));
         assertThat((String) product.get("uri"), endsWith("/products/53c4971cbaee369cc69d9e2d"));
+        assertThat((String) product.get("id"), is("53c4971cbaee369cc69d9e2d"));
     }
 
 
