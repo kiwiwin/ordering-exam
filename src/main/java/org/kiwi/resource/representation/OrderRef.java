@@ -10,9 +10,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class OrderRef {
 
-    private final User user;
-    private final Order order;
-    private final UriInfo uriInfo;
+    private User user;
+    private Order order;
+    private UriInfo uriInfo;
+
+    public OrderRef() {
+
+    }
 
     public OrderRef(User user, Order order, UriInfo uriInfo) {
         this.user = user;

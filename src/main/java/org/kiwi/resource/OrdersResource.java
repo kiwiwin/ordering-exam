@@ -9,7 +9,9 @@ import org.kiwi.resource.representation.OrderRef;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 public class OrdersResource {
@@ -22,6 +24,7 @@ public class OrdersResource {
 
     @GET
     @Path("{orderId}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public OrderRef getOrderById(@PathParam("orderId") ObjectId orderId, @Context UriInfo uriInfo) {
         final Order order = user.getOrderById(orderId);
         if (order == null) {

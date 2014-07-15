@@ -85,6 +85,20 @@ public class OrdersResourceTest extends JerseyTest {
     }
 
     @Test
+    public void should_get_order_by_id_with_xml() {
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+
+        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
+                .request(MediaType.APPLICATION_XML_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+    }
+
+    @Test
     public void should_get_404_when_user_not_exist() {
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenThrow(new ResourceNotFoundException());
 
