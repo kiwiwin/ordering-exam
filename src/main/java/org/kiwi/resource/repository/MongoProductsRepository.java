@@ -23,6 +23,7 @@ public class MongoProductsRepository implements ProductsRepository {
         final DBObject productDocument = new BasicDBObjectBuilder()
                 .add("name", product.getName())
                 .add("description", product.getDescription())
+                .add("currentPrice", product.getCurrentPrice())
                 .get();
 
         db.getCollection("products").insert(productDocument);
@@ -46,7 +47,8 @@ public class MongoProductsRepository implements ProductsRepository {
         final String name = (String) productDocument.get("name");
         final String description = (String) productDocument.get("description");
         final Object id = productDocument.get("_id");
+        final int currentPrice = (int) productDocument.get("currentPrice");
 
-        return productWithId(id.toString(), new Product(name, description, 100));
+        return productWithId(id.toString(), new Product(name, description, currentPrice));
     }
 }

@@ -27,5 +27,7 @@ public class MongoProductsRepositoryTest {
         final Product productFromDb = productsRepository.getProductById(newProduct.getId());
 
         assertThat(productFromDb.getName(), is("apple juice"));
+        assertThat(productFromDb.getDescription(), is("good"));
+        assertThat(productFromDb.getCurrentPrice(), is(100));
     }
 }
