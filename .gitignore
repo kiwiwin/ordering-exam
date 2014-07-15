@@ -10,3 +10,4 @@ reports
 .idea
 generated
 data/
+.vagrant/

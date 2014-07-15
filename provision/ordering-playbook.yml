@@ -2,7 +2,6 @@
 
 - hosts: ordering
   sudo: yes
-  sudo_user: vagrant
   roles:
     - java
     - gradle
