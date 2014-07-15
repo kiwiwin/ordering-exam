@@ -25,10 +25,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -197,8 +194,17 @@ public class OrdersResourceTest extends JerseyTest {
         newOrder.put("shippingAddress", "Sanli,Chengdu");
         newOrder.put("createdAt", new Timestamp(114, 1, 1, 0, 0, 0, 0).toString());
 
+        List orderItems = new ArrayList<>();
+        Map orderItem = new HashMap<>();
+        orderItem.put("productId", "53c4971cbaee369cc69d9e2a");
+        orderItem.put("quantity", 3);
+        orderItem.put("price", 210);
+        orderItems.add(orderItem);
+
+        newOrder.put("orderItems", orderItems);
+
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
-        when(usersRepository.placeOrder(eq(user), anyObject())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), null)));
+        when(usersRepository.placeOrder(eq(user), anyObject())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2a"), 3, 100)))));
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
                 .request()
