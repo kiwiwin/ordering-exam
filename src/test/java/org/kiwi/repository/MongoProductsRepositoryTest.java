@@ -46,5 +46,17 @@ public class MongoProductsRepositoryTest {
         final List<Product> productsFromDb = productsRepository.getAllProducts();
 
         assertThat(productsFromDb.size(), is(2));
+
+        final Product productFromDb = productsFromDb.get(0);
+
+        assertThat(productFromDb.getName(), is("apple juice"));
+        assertThat(productFromDb.getDescription(), is("good"));
+        assertThat(productFromDb.getCurrentPrice(), is(100));
+
+        final Product productFromDb2 = productsFromDb.get(1);
+
+        assertThat(productFromDb2.getName(), is("banana juice"));
+        assertThat(productFromDb2.getDescription(), is("bad"));
+        assertThat(productFromDb2.getCurrentPrice(), is(200));
     }
 }
