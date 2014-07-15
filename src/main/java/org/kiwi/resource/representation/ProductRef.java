@@ -17,4 +17,9 @@ public class ProductRef {
     public String getName() {
         return product.getName();
     }
+
+    @XmlElement
+    public String getDescription() {
+        return product.getDescription();
+    }
 }

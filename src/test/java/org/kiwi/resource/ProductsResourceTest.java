@@ -57,7 +57,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_product_by_id() {
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice")));
+        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good")));
 
         final Response response = target("/products/53c4971cbaee369cc69d9e2d")
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -68,6 +68,7 @@ public class ProductsResourceTest extends JerseyTest {
         final Map product = response.readEntity(Map.class);
 
         assertThat((String) product.get("name"), is("apple juice"));
+        assertThat((String) product.get("description"), is("good"));
     }
 
 
