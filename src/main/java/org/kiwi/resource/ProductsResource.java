@@ -31,7 +31,7 @@ public class ProductsResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<ProductRef> getAllProducts(@Context UriInfo uriInfo) {
         return productsRepository.getAllProducts().stream()
                 .map(product -> new ProductRef(product, uriInfo))
