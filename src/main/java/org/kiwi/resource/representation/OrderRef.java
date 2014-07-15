@@ -39,4 +39,9 @@ public class OrderRef {
     public String getUri() {
         return uriInfo.getBaseUri() + "users/" + user.getId() + "/orders/" + order.getId();
     }
+
+    @XmlElement
+    public String getCreatedAt() {
+        return order.getCreatedAt().toString();
+    }
 }

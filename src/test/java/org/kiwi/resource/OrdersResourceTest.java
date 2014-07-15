@@ -22,6 +22,7 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -64,7 +65,7 @@ public class OrdersResourceTest extends JerseyTest {
     @Test
     public void should_get_order_by_id() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu")));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
 
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
 
@@ -79,6 +80,7 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(order.get("receiver"), is("Jingcheng Wen"));
         assertThat(order.get("shippingAddress"), is("Sanli,Chengdu"));
         assertThat(order.get("id"), is("53c4971cbaee369cc69d9e2e"));
+        assertThat(order.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 0, 0, 0).toString()));
         assertThat((String) order.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e"));
     }
 
