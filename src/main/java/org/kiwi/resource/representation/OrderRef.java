@@ -18,4 +18,9 @@ public class OrderRef {
     public String getReceiver() {
         return order.getReceiver();
     }
+
+    @XmlElement
+    public String getShippingAddress() {
+        return order.getShippingAddress();
+    }
 }

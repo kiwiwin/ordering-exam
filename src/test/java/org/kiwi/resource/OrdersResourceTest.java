@@ -63,7 +63,7 @@ public class OrdersResourceTest extends JerseyTest {
     @Test
     public void should_get_order_by_id() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen")));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu")));
 
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
 
@@ -76,6 +76,7 @@ public class OrdersResourceTest extends JerseyTest {
         final Map order = response.readEntity(Map.class);
 
         assertThat(order.get("receiver"), is("Jingcheng Wen"));
+        assertThat(order.get("shippingAddress"), is("Sanli,Chengdu"));
     }
 
     @Test
