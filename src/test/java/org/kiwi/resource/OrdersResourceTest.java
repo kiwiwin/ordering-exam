@@ -149,4 +149,19 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(order.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 0, 0, 0).toString()));
         assertThat((String) order.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e"));
     }
+
+    @Test
+    public void should_get_all_orders_with_xml() {
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 2, 1, 0, 0, 0, 0))));
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+
+        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
+                .request(MediaType.APPLICATION_XML_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+    }
 }
