@@ -4,6 +4,7 @@ import com.mongodb.*;
 import org.bson.types.ObjectId;
 import org.kiwi.resource.domain.Order;
 import org.kiwi.resource.domain.OrderItem;
+import org.kiwi.resource.domain.Payment;
 import org.kiwi.resource.domain.User;
 
 import java.sql.Timestamp;
@@ -106,6 +107,11 @@ public class MongoUsersRepository implements UsersRepository {
         db.getCollection("users").findAndModify(new BasicDBObject("_id", user.getId()), userDocument);
 
         return orderWithId(orderId.toString(), order);
+    }
+
+    @Override
+    public Payment payOrder(User user, Order order, Payment payment) {
+        return null;
     }
 
     private DBObject mapOrderToDocument(ObjectId orderId, Order order) {

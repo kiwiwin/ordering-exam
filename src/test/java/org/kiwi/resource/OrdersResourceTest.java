@@ -21,9 +21,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -216,7 +214,6 @@ public class OrdersResourceTest extends JerseyTest {
     }
 
 
-
     @Test
     public void should_get_order_payment() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
@@ -240,7 +237,30 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(payment.get("paymentType"), is("cash"));
         assertThat(payment.get("amount"), is(100));
         assertThat(payment.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 1, 0, 0).toString()));
-        assertThat((String)payment.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment"));
+        assertThat((String) payment.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment"));
     }
 
+    @Test
+    public void should_pay_for_order() {
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+
+        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+
+        final Order newOrder = orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
+        user.placeOrder(newOrder);
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.payOrder(anyObject(), anyObject(), anyObject())).thenReturn(new Payment("cash", 100, new Timestamp(114, 1, 1, 0, 1, 0, 0)));
+
+        final MultivaluedMap<String, String> paymentValues = new MultivaluedHashMap<>();
+        paymentValues.putSingle("paymentType", "cash");
+        paymentValues.putSingle("amount", "100");
+        paymentValues.putSingle("createdAt", new Timestamp(114, 1, 1, 0, 0, 0, 0).toString());
+
+        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment")
+                .request()
+                .post(Entity.form(paymentValues));
+
+        assertThat(response.getStatus(), is(201));
+    }
 }

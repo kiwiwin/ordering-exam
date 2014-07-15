@@ -3,6 +3,7 @@ package org.kiwi.resource;
 import org.bson.types.ObjectId;
 import org.kiwi.resource.domain.Order;
 import org.kiwi.resource.domain.OrderItem;
+import org.kiwi.resource.domain.Payment;
 import org.kiwi.resource.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.UsersRepository;
@@ -10,10 +11,7 @@ import org.kiwi.resource.representation.OrderRef;
 import org.kiwi.resource.representation.PaymentRef;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +60,27 @@ public class OrdersResource {
         return new PaymentRef(order.getPayment(), uriInfo);
     }
 
+
+    @POST
+    @Path("{orderId}/payment")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response payOrder(@PathParam("orderId") ObjectId orderId, Form form, @Context UriInfo uriInfo) {
+        final Order order = user.getOrderById(orderId);
+        if (order == null) {
+            throw new ResourceNotFoundException();
+        }
+
+        final Payment payment = usersRepository.payOrder(user, order, getPaymentFromForm(form));
+
+        return Response.status(201).header("location", new PaymentRef(payment, uriInfo)).build();
+    }
+
+    private Payment getPaymentFromForm(Form form) {
+        final MultivaluedMap<String, String> map = form.asMap();
+        return new Payment(map.getFirst("paymentType"),
+                Integer.valueOf(map.getFirst("amount")),
+                Timestamp.valueOf(map.getFirst("createdAt")));
+    }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
