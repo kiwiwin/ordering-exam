@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -96,5 +97,9 @@ public class ProductsResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(200));
+
+        final List products = response.readEntity(List.class);
+
+        assertThat(products.size(), is(1));
     }
 }
