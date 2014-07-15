@@ -9,6 +9,8 @@ import org.kiwi.resource.representation.OrderRef;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
 public class OrdersResource {
 
@@ -20,12 +22,12 @@ public class OrdersResource {
 
     @GET
     @Path("{orderId}")
-    public OrderRef getOrderById(@PathParam("orderId") ObjectId orderId) {
+    public OrderRef getOrderById(@PathParam("orderId") ObjectId orderId, @Context UriInfo uriInfo) {
         final Order order = user.getOrderById(orderId);
         if (order == null) {
             throw new ResourceNotFoundException();
         }
 
-        return new OrderRef(order);
+        return new OrderRef(user, order, uriInfo);
     }
 }

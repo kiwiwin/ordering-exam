@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
 import static org.kiwi.resource.domain.OrderWithId.orderWithId;
 import static org.kiwi.resource.domain.UserWithId.userWithId;
@@ -78,6 +79,7 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(order.get("receiver"), is("Jingcheng Wen"));
         assertThat(order.get("shippingAddress"), is("Sanli,Chengdu"));
         assertThat(order.get("id"), is("53c4971cbaee369cc69d9e2e"));
+        assertThat((String) order.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e"));
     }
 
     @Test
