@@ -5,6 +5,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import org.bson.types.ObjectId;
+import org.kiwi.resource.domain.Order;
 import org.kiwi.resource.domain.User;
 
 import static org.kiwi.resource.domain.UserWithId.userWithId;
@@ -40,5 +41,10 @@ public class MongoUsersRepository implements UsersRepository {
         db.getCollection("users").insert(userDocument);
 
         return userWithId(userDocument.get("_id").toString(), user);
+    }
+
+    @Override
+    public Order placeOrder(User user, Order order) {
+        return null;
     }
 }

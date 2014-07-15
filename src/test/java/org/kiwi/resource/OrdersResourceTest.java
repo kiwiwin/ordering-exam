@@ -35,6 +35,7 @@ import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
 import static org.kiwi.resource.domain.OrderWithId.orderWithId;
 import static org.kiwi.resource.domain.UserWithId.userWithId;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -179,11 +180,13 @@ public class OrdersResourceTest extends JerseyTest {
         newOrder.put("createdAt", new Timestamp(114, 1, 1, 0, 0, 0, 0).toString());
 
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.placeOrder(eq(user), anyObject())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
                 .request()
                 .post(Entity.entity(newOrder, MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatus(), is(201));
+        assertThat(response.getHeaderString("location"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2f"));
     }
 }

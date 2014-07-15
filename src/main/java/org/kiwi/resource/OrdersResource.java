@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.kiwi.resource.domain.Order;
 import org.kiwi.resource.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
+import org.kiwi.resource.repository.UsersRepository;
 import org.kiwi.resource.representation.OrderRef;
 
 import javax.ws.rs.*;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,9 +20,11 @@ import java.util.stream.Collectors;
 public class OrdersResource {
 
     private final User user;
+    private final UsersRepository usersRepository;
 
-    public OrdersResource(User user) {
+    public OrdersResource(User user, UsersRepository usersRepository) {
         this.user = user;
+        this.usersRepository = usersRepository;
     }
 
     @GET
@@ -45,7 +49,15 @@ public class OrdersResource {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response placeOrder(Map orderParams) {
-        return Response.status(201).build();
+    public Response placeOrder(Map orderParams, @Context UriInfo uriInfo) {
+        final Order order = getOrderFromOrderParams(orderParams);
+        final Order newOrder = usersRepository.placeOrder(user, order);
+        return Response.status(201).header("location", new OrderRef(user, newOrder, uriInfo).getUri()).build();
+    }
+
+    private Order getOrderFromOrderParams(Map orderParams) {
+        return new Order((String) orderParams.get("receiver"),
+                (String) orderParams.get("shippingAddress"),
+                Timestamp.valueOf((String) orderParams.get("createdAt")));
     }
 }
