@@ -17,6 +17,6 @@ public class UsersResource {
     public OrdersResource getOrdersResource(@PathParam("userId") ObjectId userId) {
         final User user = usersRepository.getUserById(userId);
 
-        return new OrdersResource();
+        return new OrdersResource(user);
     }
 }

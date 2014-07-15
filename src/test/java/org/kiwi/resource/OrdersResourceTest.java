@@ -11,6 +11,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.App;
+import org.kiwi.resource.domain.Order;
 import org.kiwi.resource.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.repository.UsersRepository;
@@ -23,6 +24,7 @@ import javax.ws.rs.core.Response;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.kiwi.resource.domain.OrderWithId.orderWithId;
 import static org.kiwi.resource.domain.UserWithId.userWithId;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
@@ -58,7 +60,10 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_order_by_id() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi")));
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order()));
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -70,6 +75,19 @@ public class OrdersResourceTest extends JerseyTest {
     @Test
     public void should_get_404_when_user_not_exist() {
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenThrow(new ResourceNotFoundException());
+
+        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
+                .request(MediaType.APPLICATION_JSON_TYPE)
+                .get();
+
+        assertThat(response.getStatus(), is(404));
+    }
+
+    @Test
+    public void should_get_404_when_order_not_exist() {
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
                 .request(MediaType.APPLICATION_JSON_TYPE)
