@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.App;
 import org.kiwi.domain.Product;
+import org.kiwi.repository.ProductsRepository;
 import org.kiwi.resource.exception.ResourceNotFoundException;
-import org.kiwi.resource.repository.ProductsRepository;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 

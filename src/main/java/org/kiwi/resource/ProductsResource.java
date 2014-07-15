@@ -2,7 +2,7 @@ package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
 import org.kiwi.domain.Product;
-import org.kiwi.resource.repository.ProductsRepository;
+import org.kiwi.repository.ProductsRepository;
 import org.kiwi.resource.representation.ProductRef;
 
 import javax.inject.Inject;

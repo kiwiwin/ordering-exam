@@ -2,7 +2,7 @@ package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
 import org.kiwi.domain.User;
-import org.kiwi.resource.repository.UsersRepository;
+import org.kiwi.repository.UsersRepository;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;

@@ -5,8 +5,8 @@ import org.kiwi.domain.Order;
 import org.kiwi.domain.OrderItem;
 import org.kiwi.domain.Payment;
 import org.kiwi.domain.User;
+import org.kiwi.repository.UsersRepository;
 import org.kiwi.resource.exception.ResourceNotFoundException;
-import org.kiwi.resource.repository.UsersRepository;
 import org.kiwi.resource.representation.OrderRef;
 import org.kiwi.resource.representation.PaymentRef;
 

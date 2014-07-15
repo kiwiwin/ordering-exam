@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.domain.Product;
-import org.kiwi.resource.repository.MongoProductsRepository;
 
 import java.util.List;
 

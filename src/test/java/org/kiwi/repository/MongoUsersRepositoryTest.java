@@ -6,8 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.domain.*;
-import org.kiwi.resource.repository.MongoProductsRepository;
-import org.kiwi.resource.repository.MongoUsersRepository;
 
 import java.sql.Timestamp;
 import java.util.Arrays;

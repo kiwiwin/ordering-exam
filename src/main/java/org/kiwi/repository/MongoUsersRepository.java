@@ -1,4 +1,4 @@
-package org.kiwi.resource.repository;
+package org.kiwi.repository;
 
 import com.mongodb.*;
 import org.bson.types.ObjectId;

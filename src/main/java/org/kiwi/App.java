@@ -9,10 +9,10 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.kiwi.resource.repository.MongoProductsRepository;
-import org.kiwi.resource.repository.MongoUsersRepository;
-import org.kiwi.resource.repository.ProductsRepository;
-import org.kiwi.resource.repository.UsersRepository;
+import org.kiwi.repository.MongoProductsRepository;
+import org.kiwi.repository.MongoUsersRepository;
+import org.kiwi.repository.ProductsRepository;
+import org.kiwi.repository.UsersRepository;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.ContextResolver;

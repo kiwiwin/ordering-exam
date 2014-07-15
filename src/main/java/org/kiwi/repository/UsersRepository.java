@@ -1,4 +1,4 @@
-package org.kiwi.resource.repository;
+package org.kiwi.repository;
 
 import org.bson.types.ObjectId;
 import org.kiwi.domain.Order;
