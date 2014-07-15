@@ -1,6 +1,7 @@
 package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
+import org.glassfish.grizzly.http.util.TimeStamp;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -18,11 +19,14 @@ import org.kiwi.resource.repository.UsersRepository;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -163,5 +167,23 @@ public class OrdersResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(200));
+    }
+
+    @Test
+    public void should_create_order() {
+        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+
+        Map newOrder = new HashMap<>();
+        newOrder.put("receiver", "Jingcheng Wen");
+        newOrder.put("shippingAddress", "Sanli,Chengdu");
+        newOrder.put("createdAt", new Timestamp(114, 1, 1, 0, 0, 0, 0).toString());
+
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+
+        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
+                .request()
+                .post(Entity.entity(newOrder, MediaType.APPLICATION_JSON_TYPE));
+
+        assertThat(response.getStatus(), is(201));
     }
 }

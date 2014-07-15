@@ -6,14 +6,13 @@ import org.kiwi.resource.domain.User;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.representation.OrderRef;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class OrdersResource {
@@ -42,5 +41,11 @@ public class OrdersResource {
         return user.getOrders().stream()
                 .map(order -> new OrderRef(user, order, uriInfo))
                 .collect(Collectors.toList());
+    }
+
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response placeOrder(Map orderParams) {
+        return Response.status(201).build();
     }
 }

@@ -30,7 +30,7 @@ public class MongoUsersRepository implements UsersRepository {
 
         return userWithId(id.toString(), new User(name));
     }
-    
+
     @Override
     public User createUser(User user) {
         final DBObject userDocument = new BasicDBObjectBuilder()
