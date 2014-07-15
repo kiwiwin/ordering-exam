@@ -2,13 +2,16 @@ package org.kiwi.resource.representation;
 
 import org.kiwi.resource.domain.Payment;
 
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlElement;
 
 public class PaymentRef {
     private final Payment payment;
+    private UriInfo uriInfo;
 
-    public PaymentRef(Payment payment) {
+    public PaymentRef(Payment payment, UriInfo uriInfo) {
         this.payment = payment;
+        this.uriInfo = uriInfo;
     }
 
     @XmlElement
@@ -24,5 +27,10 @@ public class PaymentRef {
     @XmlElement
     public String getCreatedAt() {
         return payment.getCreatedAt().toString();
+    }
+
+    @XmlElement
+    public String getUri() {
+        return uriInfo.getAbsolutePath().toString();
     }
 }

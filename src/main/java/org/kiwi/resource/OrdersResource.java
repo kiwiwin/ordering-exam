@@ -53,13 +53,13 @@ public class OrdersResource {
     @GET
     @Path("{orderId}/payment")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public PaymentRef getPayment(@PathParam("orderId") ObjectId orderId) {
+    public PaymentRef getPayment(@PathParam("orderId") ObjectId orderId, @Context UriInfo uriInfo) {
         final Order order = user.getOrderById(orderId);
         if (order == null) {
             throw new ResourceNotFoundException();
         }
 
-        return new PaymentRef(order.getPayment());
+        return new PaymentRef(order.getPayment(), uriInfo);
     }
 
 

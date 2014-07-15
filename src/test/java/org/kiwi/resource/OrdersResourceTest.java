@@ -240,6 +240,7 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(payment.get("paymentType"), is("cash"));
         assertThat(payment.get("amount"), is(100));
         assertThat(payment.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 1, 0, 0).toString()));
+        assertThat((String)payment.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment"));
     }
 
 }
