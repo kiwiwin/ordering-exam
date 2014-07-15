@@ -18,4 +18,9 @@ public class OrderItemRef {
     public String getProductUri() {
         return uriInfo.getBaseUri() + "products/" + orderItem.getProductId();
     }
+
+    @XmlElement
+    public int getQuantity() {
+        return orderItem.getQuantity();
+    }
 }

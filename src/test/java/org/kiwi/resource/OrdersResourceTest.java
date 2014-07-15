@@ -94,6 +94,10 @@ public class OrdersResourceTest extends JerseyTest {
         final List orderItemsResult = (List) order.get("orderItems");
 
         assertThat(orderItemsResult.size(), is(1));
+
+        final Map orderItem = (Map) orderItemsResult.get(0);
+        assertThat((String) orderItem.get("productUri"), endsWith("/products/53c4971cbaee369cc69d9e2f"));
+        assertThat(orderItem.get("quantity"), is(3));
     }
 
     @Test
