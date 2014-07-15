@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.kiwi.resource.domain.UserWithId.userWithId;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +58,7 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_order_by_id() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(new User());
+        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi")));
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
                 .request(MediaType.APPLICATION_JSON_TYPE)
