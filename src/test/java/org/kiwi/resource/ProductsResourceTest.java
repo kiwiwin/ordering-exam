@@ -8,6 +8,7 @@ import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.App;
@@ -33,8 +34,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductsResourceTest extends JerseyTest {
+    private static final String NOT_EXIST_PRODUCT_ID = "53c4971cbaee369cc69d9e2d";
+    private static final String PRODUCT_ID = "53c4971cbaee369cc69d9e2f";
     @Mock
     private ProductsRepository productsRepository;
+    private Product product;
 
     @Override
     protected Application configure() {
@@ -59,11 +63,18 @@ public class ProductsResourceTest extends JerseyTest {
         config.register(JacksonFeature.class);
     }
 
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        product = productWithId(PRODUCT_ID, new Product("apple juice", "good", 100));
+    }
+
     @Test
     public void should_get_product_by_id() {
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100)));
+        when(productsRepository.getProductById(eq(new ObjectId(PRODUCT_ID)))).thenReturn(product);
 
-        final Response response = target("/products/53c4971cbaee369cc69d9e2d")
+        final Response response = target("/products/" + PRODUCT_ID)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
@@ -73,16 +84,16 @@ public class ProductsResourceTest extends JerseyTest {
 
         assertThat(product.get("name"), is("apple juice"));
         assertThat(product.get("description"), is("good"));
-        assertThat((String) product.get("uri"), endsWith("/products/53c4971cbaee369cc69d9e2d"));
-        assertThat(product.get("id"), is("53c4971cbaee369cc69d9e2d"));
+        assertThat((String) product.get("uri"), endsWith("/products/" + PRODUCT_ID));
+        assertThat(product.get("id"), is(PRODUCT_ID));
         assertThat(product.get("currentPrice"), is(100));
     }
 
     @Test
     public void should_get_product_by_id_with_xml() {
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100)));
+        when(productsRepository.getProductById(eq(new ObjectId(PRODUCT_ID)))).thenReturn(product);
 
-        final Response response = target("/products/53c4971cbaee369cc69d9e2d")
+        final Response response = target("/products/" + PRODUCT_ID)
                 .request(MediaType.APPLICATION_XML_TYPE)
                 .get();
 
@@ -91,9 +102,9 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_404_when_product_not_exist() {
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenThrow(new ResourceNotFoundException());
+        when(productsRepository.getProductById(eq(new ObjectId(NOT_EXIST_PRODUCT_ID)))).thenThrow(new ResourceNotFoundException());
 
-        final Response response = target("/products/53c4971cbaee369cc69d9e2d")
+        final Response response = target("/products/" + NOT_EXIST_PRODUCT_ID)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
@@ -102,7 +113,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_products() {
-        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100))));
+        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(product));
 
         final Response response = target("/products")
                 .request(MediaType.APPLICATION_JSON_TYPE)
@@ -118,14 +129,14 @@ public class ProductsResourceTest extends JerseyTest {
 
         assertThat(product.get("name"), is("apple juice"));
         assertThat(product.get("description"), is("good"));
-        assertThat((String) product.get("uri"), endsWith("/products/53c4971cbaee369cc69d9e2d"));
-        assertThat(product.get("id"), is("53c4971cbaee369cc69d9e2d"));
+        assertThat((String) product.get("uri"), endsWith("/products/" + PRODUCT_ID));
+        assertThat(product.get("id"), is(PRODUCT_ID));
         assertThat(product.get("currentPrice"), is(100));
     }
 
     @Test
     public void should_get_all_products_with_xml() {
-        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(productWithId("53c4971cbaee369cc69d9e2d", new Product("apple juice", "good", 100))));
+        when(productsRepository.getAllProducts()).thenReturn(Arrays.asList(product));
 
         final Response response = target("/products")
                 .request(MediaType.APPLICATION_XML_TYPE)
