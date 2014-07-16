@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.kiwi.domain.*;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -38,7 +37,7 @@ public class MorphiaUsersRepositoryTest extends MorphiaBaseTest {
 
     @Test
     public void should_user_place_order() {
-        final Order order = usersRepository.placeOrder(user, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(product.getId(), 3, 100))));
+        final Order order = usersRepository.placeOrder(user, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(product, 3, 100))));
 
         final User userFromDb = usersRepository.getUserById(user.getId());
 
@@ -59,7 +58,7 @@ public class MorphiaUsersRepositoryTest extends MorphiaBaseTest {
 
     @Test
     public void should_pay_order() {
-        final Order order = usersRepository.placeOrder(user, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(product.getId(), 3, 100))));
+        final Order order = usersRepository.placeOrder(user, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(product, 3, 100))));
 
         usersRepository.payOrder(user, order, new Payment("cash", 100, new Timestamp(114, 1, 1, 1, 0, 0, 0)));
 
