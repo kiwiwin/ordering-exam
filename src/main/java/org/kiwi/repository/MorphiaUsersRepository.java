@@ -36,6 +36,9 @@ public class MorphiaUsersRepository implements UsersRepository {
 
     @Override
     public Payment payOrder(User user, Order order, Payment payment) {
-        return null;
+        final Order orderById = user.getOrderById(order.getId());
+        orderById.pay(payment);
+        datastore.save(user);
+        return payment;
     }
 }

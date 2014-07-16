@@ -3,9 +3,12 @@ package org.kiwi.domain;
 import java.sql.Timestamp;
 
 public class Payment {
-    private final String paymentType;
-    private final int amount;
-    private final Timestamp createdAt;
+    private String paymentType;
+    private int amount;
+    private Timestamp createdAt;
+
+    Payment() {
+    }
 
     public Payment(String paymentType, int amount, Timestamp createdAt) {
         this.paymentType = paymentType;
