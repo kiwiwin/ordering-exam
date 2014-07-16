@@ -9,10 +9,9 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.moxy.json.MoxyJsonConfig;
 import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.kiwi.repository.MongoProductsRepository;
-import org.kiwi.repository.MongoUsersRepository;
-import org.kiwi.repository.ProductsRepository;
-import org.kiwi.repository.UsersRepository;
+import org.kiwi.repository.*;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.ext.ContextResolver;
@@ -42,10 +41,10 @@ public class App {
 
     private static HttpServer startServer() throws UnknownHostException {
         MongoClient mongoClient = new MongoClient("localhost", 27017);
-        DB db = mongoClient.getDB("production");
+        final Datastore datastore = new Morphia().createDatastore(mongoClient, "production");
 
-        final MongoUsersRepository mongoUserRepository = new MongoUsersRepository(db);
-        final MongoProductsRepository mongoProductRepository = new MongoProductsRepository(db);
+        final MorphiaProductsRepository morphiaProductsRepository = new MorphiaProductsRepository(datastore);
+        final MorphiaUsersRepository morphiaUsersRepository = new MorphiaUsersRepository(datastore);
 
         final ResourceConfig config = new ResourceConfig()
                 .packages("org.kiwi.resource")
@@ -55,8 +54,8 @@ public class App {
                 .register(new AbstractBinder() {
                     @Override
                     protected void configure() {
-                        bind(mongoUserRepository).to(UsersRepository.class);
-                        bind(mongoProductRepository).to(ProductsRepository.class);
+                        bind(morphiaUsersRepository).to(UsersRepository.class);
+                        bind(morphiaProductsRepository).to(ProductsRepository.class);
                     }
                 });
         return GrizzlyHttpServerFactory.createHttpServer(getBaseURI(), config);
