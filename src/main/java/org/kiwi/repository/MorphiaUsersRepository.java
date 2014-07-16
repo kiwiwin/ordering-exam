@@ -28,16 +28,17 @@ public class MorphiaUsersRepository implements UsersRepository {
 
     @Override
     public Order placeOrder(User user, Order order) {
-        final Order orderWithId = orderWithId(new ObjectId().toString(), order);
-        user.placeOrder(orderWithId);
+        user.placeOrder(order);
+        datastore.save(order);
         datastore.save(user);
-        return orderWithId;
+        return order;
     }
 
     @Override
     public Payment payOrder(User user, Order order, Payment payment) {
         final Order orderById = user.getOrderById(order.getId());
         orderById.pay(payment);
+        datastore.save(order);
         datastore.save(user);
         return payment;
     }
