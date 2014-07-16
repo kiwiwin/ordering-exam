@@ -1,12 +1,19 @@
 package org.kiwi.domain;
 
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
+@Entity("products")
 public class Product {
+    @Id
     ObjectId id;
-    private final String name;
-    private final String description;
-    private final int currentPrice;
+    private String name;
+    private String description;
+    private int currentPrice;
+
+    Product() {
+    }
 
     public Product(String name, String description, int currentPrice) {
         this.name = name;
