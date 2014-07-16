@@ -1,14 +1,24 @@
 package org.kiwi.domain;
 
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class User {
+    @Id
     ObjectId id;
-    private final String name;
+    private String name;
+    @Transient
     private List<Order> orders = new ArrayList<>();
+
+    //for morphia
+    User() {
+    }
 
     public User(String name) {
         this.name = name;
