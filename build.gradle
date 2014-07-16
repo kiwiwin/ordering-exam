@@ -46,10 +46,13 @@ dependencies {
     compile "org.glassfish.jersey.media:jersey-media-moxy:$jerseyVersion"
     compile "org.glassfish.jersey.media:jersey-media-json-jackson:$jerseyVersion"
 
+    compile "org.mongodb.morphia:morphia:0.108"
+    compile "org.mongodb:mongo-java-driver:2.12.2"
+
     testCompile "org.glassfish.jersey.test-framework:jersey-test-framework-core:$jerseyVersion"
     testCompile "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:$jerseyVersion"
 
-    compile "org.mongodb:mongo-java-driver:2.12.2"
+    testCompile "de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.46.0"
 
     testCompile "org.mockito:mockito-all:$mockitoVersion"
     testCompile "junit:junit:$junitVersion"
@@ -92,6 +95,10 @@ task deploy(type: SshTask, dependsOn: uberjar) {
 
         executeBackground('nohup java -jar /home/vagrant/ordering-exam-standalone.jar 1>/dev/null 2>&1 < /dev/null &')
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
