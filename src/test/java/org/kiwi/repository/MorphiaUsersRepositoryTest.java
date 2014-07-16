@@ -51,7 +51,7 @@ public class MorphiaUsersRepositoryTest extends MorphiaBaseTest {
 
         final OrderItem orderItem = orderFromDb.getOrderItems().get(0);
 
-        assertThat(orderItem.getProductId(), is(product.getId()));
+        assertThat(orderItem.getProduct().getId(), is(product.getId()));
         assertThat(orderItem.getQuantity(), is(3));
         assertThat(orderItem.getPrice(), is(100));
     }

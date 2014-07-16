@@ -1,7 +1,6 @@
 package org.kiwi.domain;
 
 import jdk.nashorn.internal.ir.annotations.Reference;
-import org.bson.types.ObjectId;
 
 public class OrderItem {
     @Reference
@@ -17,10 +16,6 @@ public class OrderItem {
         this.product = product;
         this.quantity = quantity;
         this.price = price;
-    }
-
-    public ObjectId getProductId() {
-        return product.getId();
     }
 
     public int getQuantity() {
