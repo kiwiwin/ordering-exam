@@ -42,6 +42,12 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrdersResourceTest extends JerseyTest {
+    private static final String USER_ID = "53c4971cbaee369cc69d9e2d";
+    private static final String PRODUCT_ID = "53c4971cbaee369cc69d9e2f";
+    private static final String ORDER_ID = "53c4971cbaee369cc69d9e2e";
+    private static final String NEW_ORDER_ID = "53c4971cbaee369cc69d9e2e";
+    private static final String NOT_EXIST_USER_ID = "53c4971cbaee369cc69d9e2a";
+    private static final String NOT_EXIST_ORDER_ID = "53c4971cbaee369cc69d9e2a";
     @Mock
     private UsersRepository usersRepository;
 
@@ -58,10 +64,10 @@ public class OrdersResourceTest extends JerseyTest {
     public void setUp() throws Exception {
         super.setUp();
 
-        user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+        user = userWithId(USER_ID, new User("kiwi"));
 
-        final List<OrderItem> orderItems = asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
-        order = orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
+        final List<OrderItem> orderItems = asList(new OrderItem(productWithId(new ObjectId(PRODUCT_ID), new Product("apple juice", "good", 100)), 3, 100));
+        order = orderWithId(ORDER_ID, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
         user.placeOrder(order);
     }
 
@@ -91,9 +97,9 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_order_by_id() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
+        final Response response = target("/users/" + USER_ID + "/orders/" + ORDER_ID)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
@@ -103,9 +109,9 @@ public class OrdersResourceTest extends JerseyTest {
 
         assertThat(order.get("receiver"), is("Jingcheng Wen"));
         assertThat(order.get("shippingAddress"), is("Sanli,Chengdu"));
-        assertThat(order.get("id"), is("53c4971cbaee369cc69d9e2e"));
+        assertThat(order.get("id"), is(ORDER_ID));
         assertThat(order.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 0, 0, 0).toString()));
-        assertThat((String) order.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e"));
+        assertThat((String) order.get("uri"), endsWith("/users/" + USER_ID + "/orders/" + ORDER_ID));
 
         final List orderItemsResult = (List) order.get("orderItems");
 
@@ -116,20 +122,16 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(orderItem.get("price"), is(100));
 
         final Map product = (Map) orderItem.get("product");
-        assertThat((String) product.get("uri"), endsWith("/products/53c4971cbaee369cc69d9e2f"));
+        assertThat((String) product.get("uri"), endsWith("/products/" + PRODUCT_ID));
         assertThat(product.get("name"), is("apple juice"));
         assertThat(product.get("description"), is("good"));
     }
 
     @Test
     public void should_get_order_by_id_with_xml() {
-        final List<OrderItem> orderItems = asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
 
-        user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems)));
-
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
-
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
+        final Response response = target("/users/" + USER_ID + "/orders/" + ORDER_ID)
                 .request(MediaType.APPLICATION_XML_TYPE)
                 .get();
 
@@ -138,9 +140,9 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_404_when_user_not_exist() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenThrow(new ResourceNotFoundException());
+        when(usersRepository.getUserById(eq(new ObjectId(NOT_EXIST_USER_ID)))).thenThrow(new ResourceNotFoundException());
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
+        final Response response = target("/users/" + NOT_EXIST_USER_ID + "/orders/" + ORDER_ID)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
@@ -149,9 +151,9 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_404_when_order_not_exist() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2a")
+        final Response response = target("/users/" + USER_ID + "/orders/" + NOT_EXIST_ORDER_ID)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
@@ -160,9 +162,9 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_orders() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
+        final Response response = target("/users/" + USER_ID + "/orders")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
@@ -176,16 +178,16 @@ public class OrdersResourceTest extends JerseyTest {
 
         assertThat(order.get("receiver"), is("Jingcheng Wen"));
         assertThat(order.get("shippingAddress"), is("Sanli,Chengdu"));
-        assertThat(order.get("id"), is("53c4971cbaee369cc69d9e2e"));
+        assertThat(order.get("id"), is(ORDER_ID));
         assertThat(order.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 0, 0, 0).toString()));
-        assertThat((String) order.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e"));
+        assertThat((String) order.get("uri"), endsWith("/users/" + USER_ID + "/orders/" + ORDER_ID));
     }
 
     @Test
     public void should_get_all_orders_with_xml() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
+        final Response response = target("/users/" + USER_ID + "/orders")
                 .request(MediaType.APPLICATION_XML_TYPE)
                 .get();
 
@@ -201,23 +203,23 @@ public class OrdersResourceTest extends JerseyTest {
 
         List orderItems = new ArrayList<>();
         Map orderItem = new HashMap<>();
-        orderItem.put("productId", "53c4971cbaee369cc69d9e2a");
+        orderItem.put("productId", PRODUCT_ID);
         orderItem.put("quantity", 3);
         orderItem.put("price", 210);
         orderItems.add(orderItem);
 
         newOrder.put("orderItems", orderItems);
 
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
-        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2a")))).thenReturn(productWithId(new ObjectId("53c4971cbaee369cc69d9e2a"), new Product("apple juice", "good", 100)));
-        when(usersRepository.placeOrder(eq(user), orderArgumentCaptor.capture())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2a"), new Product("apple juice", "good", 100)), 3, 100)))));
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
+        when(productsRepository.getProductById(eq(new ObjectId(PRODUCT_ID)))).thenReturn(productWithId(new ObjectId(PRODUCT_ID), new Product("apple juice", "good", 100)));
+        when(usersRepository.placeOrder(eq(user), orderArgumentCaptor.capture())).thenReturn(orderWithId(NEW_ORDER_ID, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(productWithId(new ObjectId(PRODUCT_ID), new Product("apple juice", "good", 100)), 3, 100)))));
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
+        final Response response = target("/users/" + USER_ID + "/orders")
                 .request()
                 .post(Entity.entity(newOrder, MediaType.APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatus(), is(201));
-        assertThat(response.getHeaderString("location"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2f"));
+        assertThat(response.getHeaderString("location"), endsWith("/users/" + USER_ID + "/orders/" + NEW_ORDER_ID));
 
         assertThat(orderArgumentCaptor.getValue().getReceiver(), is("Jingcheng Wen"));
         assertThat(orderArgumentCaptor.getValue().getShippingAddress(), is("Sanli,Chengdu"));
@@ -234,9 +236,9 @@ public class OrdersResourceTest extends JerseyTest {
     public void should_get_order_payment() {
         order.pay(new Payment("cash", 100, new Timestamp(114, 1, 1, 0, 1, 0, 0)));
 
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment")
+        final Response response = target("/users/" + USER_ID + "/orders/" + ORDER_ID + "/payment")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .get();
 
@@ -247,12 +249,12 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(payment.get("paymentType"), is("cash"));
         assertThat(payment.get("amount"), is(100));
         assertThat(payment.get("createdAt"), is(new Timestamp(114, 1, 1, 0, 1, 0, 0).toString()));
-        assertThat((String) payment.get("uri"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment"));
+        assertThat((String) payment.get("uri"), endsWith("/users/" + USER_ID + "/orders/" + ORDER_ID + "/payment"));
     }
 
     @Test
     public void should_pay_for_order() {
-        when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
+        when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
         when(usersRepository.payOrder(anyObject(), anyObject(), anyObject())).thenReturn(new Payment("cash", 100, new Timestamp(114, 1, 1, 0, 1, 0, 0)));
 
         final MultivaluedMap<String, String> paymentValues = new MultivaluedHashMap<>();
@@ -260,7 +262,7 @@ public class OrdersResourceTest extends JerseyTest {
         paymentValues.putSingle("amount", "100");
         paymentValues.putSingle("createdAt", new Timestamp(114, 1, 1, 0, 0, 0, 0).toString());
 
-        final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e/payment")
+        final Response response = target("/users/" + USER_ID + "/orders/" + ORDER_ID + "/payment")
                 .request()
                 .post(Entity.form(paymentValues));
 
