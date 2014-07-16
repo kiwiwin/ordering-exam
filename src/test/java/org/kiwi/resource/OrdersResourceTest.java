@@ -99,9 +99,13 @@ public class OrdersResourceTest extends JerseyTest {
         assertThat(orderItemsResult.size(), is(1));
 
         final Map orderItem = (Map) orderItemsResult.get(0);
-        assertThat((String) orderItem.get("productUri"), endsWith("/products/53c4971cbaee369cc69d9e2f"));
         assertThat(orderItem.get("quantity"), is(3));
         assertThat(orderItem.get("price"), is(100));
+
+        final Map product = (Map) orderItem.get("product");
+        assertThat((String) product.get("uri"), endsWith("/products/53c4971cbaee369cc69d9e2f"));
+        assertThat(product.get("name"), is("apple juice"));
+        assertThat(product.get("description"), is("good"));
     }
 
     @Test

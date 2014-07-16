@@ -15,8 +15,8 @@ public class OrderItemRef {
     }
 
     @XmlElement
-    public String getProductUri() {
-        return uriInfo.getBaseUri() + "products/" + orderItem.getProduct().getId();
+    public ProductRef getProduct() {
+        return new ProductRef(orderItem.getProduct(), uriInfo);
     }
 
     @XmlElement
