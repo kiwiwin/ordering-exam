@@ -11,12 +11,12 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.App;
-import org.kiwi.domain.Order;
-import org.kiwi.domain.OrderItem;
-import org.kiwi.domain.Payment;
-import org.kiwi.domain.User;
+import org.kiwi.domain.*;
+import org.kiwi.repository.ProductsRepository;
 import org.kiwi.repository.UsersRepository;
 import org.kiwi.resource.exception.ResourceNotFoundException;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -29,9 +29,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
 import static org.kiwi.domain.OrderWithId.orderWithId;
+import static org.kiwi.domain.ProductWithId.productWithId;
 import static org.kiwi.domain.UserWithId.userWithId;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,6 +41,11 @@ public class OrdersResourceTest extends JerseyTest {
     @Mock
     private UsersRepository usersRepository;
 
+    @Mock
+    private ProductsRepository productsRepository;
+
+    @Captor
+    private ArgumentCaptor<Order> orderArgumentCaptor;
 
     @Override
     protected Application configure() {
@@ -54,6 +61,7 @@ public class OrdersResourceTest extends JerseyTest {
                     @Override
                     protected void configure() {
                         bind(usersRepository).to(UsersRepository.class);
+                        bind(productsRepository).to(ProductsRepository.class);
                     }
                 });
     }
@@ -202,7 +210,8 @@ public class OrdersResourceTest extends JerseyTest {
         newOrder.put("orderItems", orderItems);
 
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
-        when(usersRepository.placeOrder(eq(user), anyObject())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2a"), 3, 100)))));
+        when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2a")))).thenReturn(productWithId(new ObjectId("53c4971cbaee369cc69d9e2a"), new Product("apple juice", "good", 100)));
+        when(usersRepository.placeOrder(eq(user), orderArgumentCaptor.capture())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2a"), 3, 100)))));
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
                 .request()
@@ -210,6 +219,15 @@ public class OrdersResourceTest extends JerseyTest {
 
         assertThat(response.getStatus(), is(201));
         assertThat(response.getHeaderString("location"), endsWith("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2f"));
+
+        assertThat(orderArgumentCaptor.getValue().getReceiver(), is("Jingcheng Wen"));
+        assertThat(orderArgumentCaptor.getValue().getShippingAddress(), is("Sanli,Chengdu"));
+        assertThat(orderArgumentCaptor.getValue().getCreatedAt(), is(new Timestamp(114, 1, 1, 0, 0, 0, 0)));
+
+        final Product productCaptor = orderArgumentCaptor.getValue().getOrderItems().get(0).getProduct();
+        assertThat(productCaptor.getName(), is("apple juice"));
+        assertThat(productCaptor.getDescription(), is("good"));
+        assertThat(productCaptor.getCurrentPrice(), is(100));
     }
 
 

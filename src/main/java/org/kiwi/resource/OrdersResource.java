@@ -1,10 +1,8 @@
 package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
-import org.kiwi.domain.Order;
-import org.kiwi.domain.OrderItem;
-import org.kiwi.domain.Payment;
-import org.kiwi.domain.User;
+import org.kiwi.domain.*;
+import org.kiwi.repository.ProductsRepository;
 import org.kiwi.repository.UsersRepository;
 import org.kiwi.representation.OrderRef;
 import org.kiwi.representation.PaymentRef;
@@ -22,10 +20,12 @@ public class OrdersResource {
 
     private final User user;
     private final UsersRepository usersRepository;
+    private final ProductsRepository productsRepository;
 
-    public OrdersResource(User user, UsersRepository usersRepository) {
+    public OrdersResource(User user, UsersRepository usersRepository, ProductsRepository productsRepository) {
         this.user = user;
         this.usersRepository = usersRepository;
+        this.productsRepository = productsRepository;
     }
 
     @GET
@@ -109,7 +109,9 @@ public class OrdersResource {
     }
 
     private OrderItem getOrderItemFromParams(Map orderItemParams) {
-        return new OrderItem(new ObjectId((String) orderItemParams.get("productId")),
+        final ObjectId productId = new ObjectId((String) orderItemParams.get("productId"));
+        final Product product = productsRepository.getProductById(productId);
+        return new OrderItem(product,
                 (int) orderItemParams.get("quantity"),
                 (int) orderItemParams.get("price"));
     }

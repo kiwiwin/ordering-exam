@@ -2,6 +2,7 @@ package org.kiwi.resource;
 
 import org.bson.types.ObjectId;
 import org.kiwi.domain.User;
+import org.kiwi.repository.ProductsRepository;
 import org.kiwi.repository.UsersRepository;
 
 import javax.inject.Inject;
@@ -13,10 +14,13 @@ public class UsersResource {
     @Inject
     private UsersRepository usersRepository;
 
+    @Inject
+    private ProductsRepository productsRepository;
+
     @Path("{userId}/orders")
     public OrdersResource getOrdersResource(@PathParam("userId") ObjectId userId) {
         final User user = usersRepository.getUserById(userId);
 
-        return new OrdersResource(user, usersRepository);
+        return new OrdersResource(user, usersRepository, productsRepository);
     }
 }
