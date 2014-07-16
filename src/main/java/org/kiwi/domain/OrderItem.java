@@ -4,11 +4,10 @@ import jdk.nashorn.internal.ir.annotations.Reference;
 import org.bson.types.ObjectId;
 
 public class OrderItem {
-    private ObjectId productId;
-    private int quantity;
-    private int price;
     @Reference
     private Product product;
+    private int quantity;
+    private int price;
 
     //morphia
     OrderItem() {
@@ -16,13 +15,12 @@ public class OrderItem {
 
     public OrderItem(Product product, int quantity, int price) {
         this.product = product;
-        this.productId = product.getId();
         this.quantity = quantity;
         this.price = price;
     }
 
     public ObjectId getProductId() {
-        return productId;
+        return product.getId();
     }
 
     public int getQuantity() {
