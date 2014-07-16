@@ -15,7 +15,6 @@ public class Order {
     private String receiver;
     private String shippingAddress;
     private Timestamp createdAt;
-    @Transient
     private List<OrderItem> orderItems;
     private Payment payment;
 

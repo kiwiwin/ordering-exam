@@ -3,9 +3,13 @@ package org.kiwi.domain;
 import org.bson.types.ObjectId;
 
 public class OrderItem {
-    private final ObjectId productId;
-    private final int quantity;
-    private final int price;
+    private ObjectId productId;
+    private int quantity;
+    private int price;
+
+    //morphia
+    OrderItem() {
+    }
 
     public OrderItem(ObjectId productId, int quantity, int price) {
         this.productId = productId;

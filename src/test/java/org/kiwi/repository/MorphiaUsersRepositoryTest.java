@@ -52,5 +52,13 @@ public class MorphiaUsersRepositoryTest extends MorphiaBaseTest {
         assertThat(orderFromDb.getReceiver(), is("Jingcheng Wen"));
         assertThat(orderFromDb.getShippingAddress(), is("Sanli,Chengdu"));
         assertThat(orderFromDb.getCreatedAt(), is(new Timestamp(114, 1, 1, 0, 0, 0, 0)));
+
+        assertThat(orderFromDb.getOrderItems().size(), is(1));
+
+        final OrderItem orderItem = orderFromDb.getOrderItems().get(0);
+
+        assertThat(orderItem.getProductId(), is(product.getId()));
+        assertThat(orderItem.getQuantity(), is(3));
+        assertThat(orderItem.getPrice(), is(100));
     }
 }
