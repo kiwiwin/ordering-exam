@@ -8,6 +8,7 @@ import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.App;
@@ -46,6 +47,15 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Captor
     private ArgumentCaptor<Order> orderArgumentCaptor;
+    private User user;
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+
+        user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
+    }
 
     @Override
     protected Application configure() {
@@ -73,8 +83,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_order_by_id() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-
         final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems)));
 
@@ -110,7 +118,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_order_by_id_with_xml() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
         final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
 
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems)));
@@ -137,8 +144,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_404_when_order_not_exist() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders/53c4971cbaee369cc69d9e2e")
@@ -150,8 +155,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_orders() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-
         final List<OrderItem> orderItems1 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         final List<OrderItem> orderItems2 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems1)));
@@ -180,7 +183,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_orders_with_xml() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
         final List<OrderItem> orderItems1 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         final List<OrderItem> orderItems2 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems1)));
@@ -197,8 +199,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_create_order() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-
         Map newOrder = new HashMap<>();
         newOrder.put("receiver", "Jingcheng Wen");
         newOrder.put("shippingAddress", "Sanli,Chengdu");
@@ -237,8 +237,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_get_order_payment() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-
         final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
 
         final Order newOrder = orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
@@ -263,8 +261,6 @@ public class OrdersResourceTest extends JerseyTest {
 
     @Test
     public void should_pay_for_order() {
-        final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-
         final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
 
         final Order newOrder = orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
