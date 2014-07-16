@@ -1,17 +1,26 @@
 package org.kiwi.domain;
 
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Transient;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@Entity
 public class Order {
+    @Id
     ObjectId id;
-    private final String receiver;
+    private String receiver;
     private String shippingAddress;
     private Timestamp createdAt;
-    private final List<OrderItem> orderItems;
+    @Transient
+    private List<OrderItem> orderItems;
     private Payment payment;
+
+    Order() {
+    }
 
     public Order(String receiver, String shippingAddress, Timestamp createdAt, List<OrderItem> orderItems) {
         this.receiver = receiver;

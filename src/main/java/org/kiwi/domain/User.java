@@ -13,7 +13,6 @@ public class User {
     @Id
     ObjectId id;
     private String name;
-    @Transient
     private List<Order> orders = new ArrayList<>();
 
     //for morphia

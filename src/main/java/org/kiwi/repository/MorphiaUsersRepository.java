@@ -6,6 +6,8 @@ import org.kiwi.domain.Payment;
 import org.kiwi.domain.User;
 import org.mongodb.morphia.Datastore;
 
+import static org.kiwi.domain.OrderWithId.orderWithId;
+
 public class MorphiaUsersRepository implements UsersRepository {
     private final Datastore datastore;
 
@@ -26,7 +28,10 @@ public class MorphiaUsersRepository implements UsersRepository {
 
     @Override
     public Order placeOrder(User user, Order order) {
-        return null;
+        final Order orderWithId = orderWithId(new ObjectId().toString(), order);
+        user.placeOrder(orderWithId);
+        datastore.save(user);
+        return orderWithId;
     }
 
     @Override
