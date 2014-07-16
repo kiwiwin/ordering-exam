@@ -58,6 +58,8 @@ public class OrdersResourceTest extends JerseyTest {
     private ArgumentCaptor<Order> orderArgumentCaptor;
     private User user;
     private Order order;
+    private Product product;
+    private Order createdOrder;
 
     @Override
     @Before
@@ -66,8 +68,10 @@ public class OrdersResourceTest extends JerseyTest {
 
         user = userWithId(USER_ID, new User("kiwi"));
 
-        final List<OrderItem> orderItems = asList(new OrderItem(productWithId(new ObjectId(PRODUCT_ID), new Product("apple juice", "good", 100)), 3, 100));
-        order = orderWithId(ORDER_ID, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
+        product = productWithId(new ObjectId(PRODUCT_ID), new Product("apple juice", "good", 100));
+        order = orderWithId(ORDER_ID, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(product, 3, 100))));
+
+        createdOrder = orderWithId(NEW_ORDER_ID, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(product, 3, 100))));
         user.placeOrder(order);
     }
 
@@ -211,8 +215,8 @@ public class OrdersResourceTest extends JerseyTest {
         newOrder.put("orderItems", orderItems);
 
         when(usersRepository.getUserById(eq(new ObjectId(USER_ID)))).thenReturn(user);
-        when(productsRepository.getProductById(eq(new ObjectId(PRODUCT_ID)))).thenReturn(productWithId(new ObjectId(PRODUCT_ID), new Product("apple juice", "good", 100)));
-        when(usersRepository.placeOrder(eq(user), orderArgumentCaptor.capture())).thenReturn(orderWithId(NEW_ORDER_ID, new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), asList(new OrderItem(productWithId(new ObjectId(PRODUCT_ID), new Product("apple juice", "good", 100)), 3, 100)))));
+        when(productsRepository.getProductById(eq(new ObjectId(PRODUCT_ID)))).thenReturn(product);
+        when(usersRepository.placeOrder(eq(user), orderArgumentCaptor.capture())).thenReturn(createdOrder);
 
         final Response response = target("/users/" + USER_ID + "/orders")
                 .request()
