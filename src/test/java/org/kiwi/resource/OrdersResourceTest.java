@@ -75,7 +75,7 @@ public class OrdersResourceTest extends JerseyTest {
     public void should_get_order_by_id() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
 
-        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems)));
 
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
@@ -107,7 +107,7 @@ public class OrdersResourceTest extends JerseyTest {
     @Test
     public void should_get_order_by_id_with_xml() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
 
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems)));
 
@@ -148,8 +148,8 @@ public class OrdersResourceTest extends JerseyTest {
     public void should_get_all_orders() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
 
-        final List<OrderItem> orderItems1 = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
-        final List<OrderItem> orderItems2 = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+        final List<OrderItem> orderItems1 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
+        final List<OrderItem> orderItems2 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems1)));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 2, 1, 0, 0, 0, 0), orderItems2)));
 
@@ -177,8 +177,8 @@ public class OrdersResourceTest extends JerseyTest {
     @Test
     public void should_get_all_orders_with_xml() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
-        final List<OrderItem> orderItems1 = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
-        final List<OrderItem> orderItems2 = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+        final List<OrderItem> orderItems1 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
+        final List<OrderItem> orderItems2 = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems1)));
         user.placeOrder(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 2, 1, 0, 0, 0, 0), orderItems2)));
 
@@ -211,7 +211,7 @@ public class OrdersResourceTest extends JerseyTest {
 
         when(usersRepository.getUserById(eq(new ObjectId("53c4971cbaee369cc69d9e2d")))).thenReturn(user);
         when(productsRepository.getProductById(eq(new ObjectId("53c4971cbaee369cc69d9e2a")))).thenReturn(productWithId(new ObjectId("53c4971cbaee369cc69d9e2a"), new Product("apple juice", "good", 100)));
-        when(usersRepository.placeOrder(eq(user), orderArgumentCaptor.capture())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2a"), 3, 100)))));
+        when(usersRepository.placeOrder(eq(user), orderArgumentCaptor.capture())).thenReturn(orderWithId("53c4971cbaee369cc69d9e2f", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2a"), new Product("apple juice", "good", 100)), 3, 100)))));
 
         final Response response = target("/users/53c4971cbaee369cc69d9e2d/orders")
                 .request()
@@ -235,7 +235,7 @@ public class OrdersResourceTest extends JerseyTest {
     public void should_get_order_payment() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
 
-        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
 
         final Order newOrder = orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
         user.placeOrder(newOrder);
@@ -261,7 +261,7 @@ public class OrdersResourceTest extends JerseyTest {
     public void should_pay_for_order() {
         final User user = userWithId("53c4971cbaee369cc69d9e2d", new User("kiwi"));
 
-        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(new ObjectId("53c4971cbaee369cc69d9e2f"), 3, 100));
+        final List<OrderItem> orderItems = Arrays.asList(new OrderItem(productWithId(new ObjectId("53c4971cbaee369cc69d9e2f"), new Product("apple juice", "good", 100)), 3, 100));
 
         final Order newOrder = orderWithId("53c4971cbaee369cc69d9e2e", new Order("Jingcheng Wen", "Sanli,Chengdu", new Timestamp(114, 1, 1, 0, 0, 0, 0), orderItems));
         user.placeOrder(newOrder);

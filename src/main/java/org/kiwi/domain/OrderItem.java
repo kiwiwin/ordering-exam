@@ -14,12 +14,6 @@ public class OrderItem {
     OrderItem() {
     }
 
-    public OrderItem(ObjectId productId, int quantity, int price) {
-        this.productId = productId;
-        this.quantity = quantity;
-        this.price = price;
-    }
-
     public OrderItem(Product product, int quantity, int price) {
         this.product = product;
         this.productId = product.getId();
