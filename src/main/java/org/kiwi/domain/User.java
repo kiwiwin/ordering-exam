@@ -1,9 +1,9 @@
 package org.kiwi.domain;
 
-import jdk.nashorn.internal.ir.annotations.Reference;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Reference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class User {
     @Id
     ObjectId id;
     private String name;
-    @Reference
+    @Reference(lazy = true, idOnly = true)
     private List<Order> orders = new ArrayList<>();
 
     //for morphia
